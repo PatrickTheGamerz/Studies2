@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Czarny Ekran</title>
+    <title>Interfejs AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-color: black;
             margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -18,21 +33,52 @@
 </head>
 <body>
 
-    <!-- Przycisk w prawym górnym rogu - w pełni przeźroczysty i niewidoczny -->
-    <div class="flex justify-end p-10">
-        <a href="https://patrickthegamerz.github.io/Studies/" target="_blank"
-           class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
-            SYMULACJA
-        </a>
+    <canvas id="matrix"></canvas>
+
+    <div class="content">
+        <!-- Przycisk w prawym górnym rogu -->
+        <div class="flex justify-end p-10">
+            <a href="https://symulacja.pl"
+               class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
+                SYMULACJA
+            </a>
+        </div>
+
+        <!-- Przycisk w prawym dolnym rogu -->
+        <div class="flex justify-end p-10">
+            <a href="https://gemini.google.com"
+               class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
+                gemini.google.com
+            </a>
+        </div>
     </div>
 
-    <!-- Przycisk w prawym dolnym rogu - w pełni przeźroczysty i niewidoczny -->
-    <div class="flex justify-end p-10">
-        <a href="https://gemini.google.com" target="_blank"
-           class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
-            gemini.google.com
-        </a>
-    </div>
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "01{AI}CODE<>_";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 35);
+    </script>
 </body>
 </html>
