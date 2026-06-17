@@ -39,7 +39,6 @@
     <canvas id="matrix"></canvas>
 
     <div class="content">
-        <!-- Przycisk w prawym górnym rogu -->
         <div class="flex justify-end p-10">
             <a href="https://patrickthegamerz.github.io/Studies/"
                class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
@@ -47,7 +46,6 @@
             </a>
         </div>
 
-        <!-- Przycisk w prawym dolnym rogu -->
         <div class="flex justify-end p-10">
             <a href="https://gemini.google.com"
                class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
@@ -60,14 +58,13 @@
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
 
-        // Funkcja obsługująca pełny ekran
+
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {});
             }
         }
 
-        // Poprawne skalowanie canvas przy zmianie rozmiaru okna
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
