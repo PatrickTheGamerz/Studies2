@@ -1,97 +1,390 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfejs AI</title>
+    <title>Global Grade Transfer System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        .content {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        /* Custom styles to hide default select arrow and ensure smooth animations */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
     </style>
 </head>
-<body onclick="toggleFullScreen()">
+<body class="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8 font-sans text-slate-800">
 
-    <canvas id="matrix"></canvas>
-
-    <div class="content">
-        <div class="flex justify-end p-10">
-            <a href="https://patrickthegamerz.github.io/Studies/"
-               class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
-                SYMULACJA
-            </a>
+    <div class="max-w-4xl w-full">
+        
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center p-3 bg-indigo-600 text-white rounded-2xl shadow-lg mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+                Global Grade Transfer
+            </h1>
+            <p class="text-slate-500 mt-2 text-lg">
+                Convert educational grades seamlessly across 10+ international systems.
+            </p>
         </div>
 
-        <div class="flex justify-end p-10">
-            <a href="https://gemini.google.com"
-               class="text-transparent pointer-events-auto cursor-pointer block py-8 px-12">
-                gemini.google.com
-            </a>
+        <!-- Main Converter Card -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden relative">
+            <div class="flex flex-col md:flex-row">
+                
+                <!-- Left Side: Source -->
+                <div class="flex-1 p-6 md:p-10">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        Original Grade
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700">Country / System</label>
+                            <div class="relative">
+                                <select id="from-system" class="w-full bg-slate-50 border border-slate-200 text-slate-800 py-3 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-medium cursor-pointer">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700">Achieved Grade</label>
+                            <div class="relative">
+                                <select id="source-grade" class="w-full bg-white border border-slate-200 text-slate-800 py-4 pl-4 pr-10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-bold text-lg cursor-pointer">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                            <p id="source-desc" class="text-sm text-slate-500 pl-1 mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swap Button -->
+                <div class="relative flex items-center justify-center md:w-0 bg-slate-50 md:bg-transparent">
+                    <div class="absolute z-10 w-full flex justify-center -mt-4 md:mt-0 md:-ml-6 md:w-auto">
+                        <button id="swap-btn" class="bg-white hover:bg-indigo-50 border border-slate-200 text-indigo-600 p-3 rounded-full shadow-md transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" title="Swap Systems">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="md:rotate-0 rotate-90"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+                        </button>
+                    </div>
+                    <!-- Desktop Divider line -->
+                    <div class="hidden md:block absolute top-0 bottom-0 left-1/2 w-px bg-slate-100 -ml-px"></div>
+                </div>
+
+                <!-- Right Side: Target -->
+                <div class="flex-1 p-6 md:p-10 bg-slate-50/50">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Equivalent Grade
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-700">Target Country / System</label>
+                            <div class="relative">
+                                <select id="to-system" class="w-full bg-white border border-slate-200 text-slate-800 py-3 pl-4 pr-10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-medium cursor-pointer">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 mt-8 md:mt-10">
+                            <label class="block text-sm font-medium text-slate-700">Converted Result</label>
+                            <div id="target-box" class="p-6 rounded-2xl border-2 flex flex-col justify-center min-h-[100px] transition-colors text-emerald-600 bg-emerald-50 border-emerald-200">
+                                <span id="target-grade" class="text-3xl md:text-4xl font-black mb-1">
+                                    --
+                                </span>
+                                <span id="target-desc" class="text-sm font-medium opacity-80">
+                                    --
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
+        <!-- Footer info block -->
+        <div class="mt-8 flex items-start space-x-3 bg-blue-50/80 rounded-xl p-4 border border-blue-100 text-blue-800 text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 mt-0.5 text-blue-500"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <p>
+                <strong>Disclaimer:</strong> Grading systems vary significantly in culture, distribution, and rigor. This tool uses a normalized equivalency algorithm based on general international credential evaluation standards. Official university transcript conversions may differ.
+            </p>
+        </div>
+
     </div>
 
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-
-
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {});
+        // Internal Standard Equivalent Score Mapping
+        const systems = {
+            pl_uni: {
+                name: "Poland (University)",
+                grades: [
+                    { grade: "5.0 (Bardzo dobry)", ises: 95, desc: "Very Good / Excellent" },
+                    { grade: "4.5 (Dobry plus)", ises: 87, desc: "Good Plus" },
+                    { grade: "4.0 (Dobry)", ises: 78, desc: "Good" },
+                    { grade: "3.5 (Dostateczny plus)", ises: 70, desc: "Satisfactory Plus" },
+                    { grade: "3.0 (Dostateczny)", ises: 63, desc: "Satisfactory / Pass" },
+                    { grade: "2.0 (Niedostateczny)", ises: 40, desc: "Fail" }
+                ]
+            },
+            uk_uni: {
+                name: "United Kingdom (University)",
+                grades: [
+                    { grade: "First Class (1st)", ises: 94, desc: "Excellent (70%+)" },
+                    { grade: "Upper Second (2:1)", ises: 84, desc: "Very Good (60-69%)" },
+                    { grade: "Lower Second (2:2)", ises: 74, desc: "Good (50-59%)" },
+                    { grade: "Third Class (3rd)", ises: 64, desc: "Satisfactory (40-49%)" },
+                    { grade: "Fail", ises: 40, desc: "Failing (<40%)" }
+                ]
+            },
+            nl_uni: {
+                name: "Netherlands (1-10 Scale)",
+                grades: [
+                    { grade: "10 (Uitmuntend)", ises: 100, desc: "Outstanding (Extremely Rare)" },
+                    { grade: "9 (Zeer goed)", ises: 96, desc: "Very Good (Rare)" },
+                    { grade: "8 (Goed)", ises: 88, desc: "Good" },
+                    { grade: "7 (Ruim voldoende)", ises: 78, desc: "More than satisfactory" },
+                    { grade: "6 (Voldoende)", ises: 65, desc: "Satisfactory / Pass" },
+                    { grade: "1 - 5 (Onvoldoende)", ises: 40, desc: "Fail" }
+                ]
+            },
+            jp_uni: {
+                name: "Japan (University)",
+                grades: [
+                    { grade: "S / AA / A+", ises: 95, desc: "Outstanding (90-100%)" },
+                    { grade: "A", ises: 85, desc: "Excellent (80-89%)" },
+                    { grade: "B", ises: 75, desc: "Good (70-79%)" },
+                    { grade: "C", ises: 65, desc: "Satisfactory (60-69%)" },
+                    { grade: "F", ises: 40, desc: "Fail (0-59%)" }
+                ]
+            },
+            us_letter: {
+                name: "United States (Letter Grades)",
+                grades: [
+                    { grade: "A+", ises: 98, desc: "Outstanding (97-100%)" },
+                    { grade: "A", ises: 94, desc: "Excellent (93-96%)" },
+                    { grade: "A-", ises: 90, desc: "Very Good (90-92%)" },
+                    { grade: "B+", ises: 87, desc: "Good (87-89%)" },
+                    { grade: "B", ises: 84, desc: "Solid (83-86%)" },
+                    { grade: "B-", ises: 80, desc: "Average Good (80-82%)" },
+                    { grade: "C+", ises: 77, desc: "Above Average (77-79%)" },
+                    { grade: "C", ises: 74, desc: "Average (73-76%)" },
+                    { grade: "C-", ises: 70, desc: "Below Average (70-72%)" },
+                    { grade: "D", ises: 64, desc: "Passing (60-69%)" },
+                    { grade: "F", ises: 40, desc: "Failing (<60%)" }
+                ]
+            },
+            us_gpa: {
+                name: "United States (4.0 GPA)",
+                grades: [
+                    { grade: "4.0", ises: 95, desc: "A / A+" },
+                    { grade: "3.7", ises: 90, desc: "A-" },
+                    { grade: "3.3", ises: 87, desc: "B+" },
+                    { grade: "3.0", ises: 84, desc: "B" },
+                    { grade: "2.7", ises: 80, desc: "B-" },
+                    { grade: "2.3", ises: 77, desc: "C+" },
+                    { grade: "2.0", ises: 74, desc: "C" },
+                    { grade: "1.7", ises: 70, desc: "C-" },
+                    { grade: "1.0", ises: 64, desc: "D" },
+                    { grade: "0.0", ises: 40, desc: "F" }
+                ]
+            },
+            de_uni: {
+                name: "Germany (1-6 Scale)",
+                grades: [
+                    { grade: "1.0 - 1.5 (Sehr Gut)", ises: 94, desc: "Very Good" },
+                    { grade: "1.6 - 2.5 (Gut)", ises: 84, desc: "Good" },
+                    { grade: "2.6 - 3.5 (Befriedigend)", ises: 74, desc: "Satisfactory" },
+                    { grade: "3.6 - 4.0 (Ausreichend)", ises: 64, desc: "Sufficient / Pass" },
+                    { grade: "4.1 - 5.0 (Nicht ausreichend)", ises: 40, desc: "Fail" }
+                ]
+            },
+            fr_uni: {
+                name: "France (0-20 Scale)",
+                grades: [
+                    { grade: "16 - 20 (Très Bien)", ises: 95, desc: "Very Good / Honors" },
+                    { grade: "14 - 15.9 (Bien)", ises: 85, desc: "Good" },
+                    { grade: "12 - 13.9 (Assez Bien)", ises: 75, desc: "Quite Good" },
+                    { grade: "10 - 11.9 (Passable)", ises: 65, desc: "Satisfactory / Pass" },
+                    { grade: "0 - 9.9 (Échec)", ises: 40, desc: "Fail" }
+                ]
+            },
+            au_uni: {
+                name: "Australia (University)",
+                grades: [
+                    { grade: "High Distinction (HD)", ises: 94, desc: "Excellent (85-100%)" },
+                    { grade: "Distinction (D)", ises: 84, desc: "Very Good (75-84%)" },
+                    { grade: "Credit (C)", ises: 74, desc: "Good (65-74%)" },
+                    { grade: "Pass (P)", ises: 62, desc: "Satisfactory (50-64%)" },
+                    { grade: "Fail (F)", ises: 40, desc: "Fail (<50%)" }
+                ]
+            },
+            cn_uni: {
+                name: "China (100-point Scale)",
+                grades: [
+                    { grade: "90 - 100 (A)", ises: 94, desc: "Excellent" },
+                    { grade: "80 - 89 (B)", ises: 84, desc: "Good" },
+                    { grade: "70 - 79 (C)", ises: 74, desc: "Average" },
+                    { grade: "60 - 69 (D)", ises: 64, desc: "Pass" },
+                    { grade: "0 - 59 (F)", ises: 40, desc: "Fail" }
+                ]
+            },
+            in_uni: {
+                name: "India (10-point CGPA)",
+                grades: [
+                    { grade: "9.0 - 10.0 (O/A+)", ises: 95, desc: "Outstanding / Excellent" },
+                    { grade: "8.0 - 8.9 (A)", ises: 85, desc: "Very Good" },
+                    { grade: "7.0 - 7.9 (B+)", ises: 75, desc: "Good" },
+                    { grade: "6.0 - 6.9 (B)", ises: 68, desc: "Above Average" },
+                    { grade: "5.0 - 5.9 (C)", ises: 60, desc: "Average / Pass" },
+                    { grade: "< 5.0 (F)", ises: 40, desc: "Fail" }
+                ]
             }
-        }
+        };
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        // State variables
+        let fromSystem = 'pl_uni';
+        let toSystem = 'uk_uni';
+        let gradeIndex = 0;
 
-        window.addEventListener('resize', resize);
-        resize();
+        // DOM Elements
+        const fromSelect = document.getElementById('from-system');
+        const toSelect = document.getElementById('to-system');
+        const sourceGradeSelect = document.getElementById('source-grade');
+        const sourceDesc = document.getElementById('source-desc');
+        const targetGradeDisplay = document.getElementById('target-grade');
+        const targetDescDisplay = document.getElementById('target-desc');
+        const targetBox = document.getElementById('target-box');
+        const swapBtn = document.getElementById('swap-btn');
 
-        const letters = "01{AI}CODE<>_";
-        const fontSize = 16;
-        const columns = Math.ceil(canvas.width / fontSize);
-        const drops = Array(columns).fill(1);
-
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters.charAt(Math.floor(Math.random() * letters.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
+        // Initialize App
+        function init() {
+            // Populate country/system dropdowns
+            for (const [key, system] of Object.entries(systems)) {
+                fromSelect.add(new Option(system.name, key));
+                toSelect.add(new Option(system.name, key));
             }
+            
+            fromSelect.value = fromSystem;
+            toSelect.value = toSystem;
+
+            updateSourceGrades();
         }
-        setInterval(draw, 35);
+
+        // Update the source grades dropdown based on selected system
+        function updateSourceGrades() {
+            sourceGradeSelect.innerHTML = '';
+            const grades = systems[fromSystem].grades;
+            
+            grades.forEach((g, idx) => {
+                sourceGradeSelect.add(new Option(g.grade, idx));
+            });
+            
+            sourceGradeSelect.value = gradeIndex;
+            updateUI();
+        }
+
+        // Determine color classes based on the ISES score
+        function getColorClasses(ises) {
+            if (ises >= 88) return "text-emerald-600 bg-emerald-50 border-emerald-200";
+            if (ises >= 75) return "text-blue-600 bg-blue-50 border-blue-200";
+            if (ises >= 60) return "text-amber-600 bg-amber-50 border-amber-200";
+            return "text-red-600 bg-red-50 border-red-200";
+        }
+
+        // Calculate equivalency and update display
+        function updateUI() {
+            // Update source description
+            const sourceGrade = systems[fromSystem].grades[gradeIndex];
+            sourceDesc.textContent = sourceGrade.desc;
+
+            // Calculate target
+            const targetScore = sourceGrade.ises;
+            const targetGrades = systems[toSystem].grades;
+            
+            let closestMatch = targetGrades[0];
+            let minDiff = Math.abs(closestMatch.ises - targetScore);
+            
+            for (let i = 1; i < targetGrades.length; i++) {
+                const diff = Math.abs(targetGrades[i].ises - targetScore);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestMatch = targetGrades[i];
+                }
+            }
+
+            // Update Target Display
+            targetGradeDisplay.textContent = closestMatch.grade;
+            targetDescDisplay.textContent = closestMatch.desc;
+
+            // Update Colors
+            const baseClasses = "p-6 rounded-2xl border-2 flex flex-col justify-center min-h-[100px] transition-colors";
+            targetBox.className = `${baseClasses} ${getColorClasses(closestMatch.ises)}`;
+        }
+
+        // Handle System Swap
+        function handleSwap() {
+            const newFrom = toSystem;
+            const newTo = fromSystem;
+            
+            const currentSourceGrade = systems[fromSystem].grades[gradeIndex];
+            const targetScore = currentSourceGrade.ises;
+            const newSourceGrades = systems[newFrom].grades;
+            
+            // Find closest index in the new source system to maintain visual equivalency
+            let closestIndex = 0;
+            let minDiff = Math.abs(newSourceGrades[0].ises - targetScore);
+            
+            for (let i = 1; i < newSourceGrades.length; i++) {
+                const diff = Math.abs(newSourceGrades[i].ises - targetScore);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIndex = i;
+                }
+            }
+
+            // Update State
+            fromSystem = newFrom;
+            toSystem = newTo;
+            gradeIndex = closestIndex;
+
+            // Update DOM Selects
+            fromSelect.value = fromSystem;
+            toSelect.value = toSystem;
+            
+            updateSourceGrades(); // Re-renders source grades and updates UI
+        }
+
+        // Event Listeners
+        fromSelect.addEventListener('change', (e) => {
+            fromSystem = e.target.value;
+            gradeIndex = 0; // Reset grade to first when switching countries
+            updateSourceGrades();
+        });
+
+        sourceGradeSelect.addEventListener('change', (e) => {
+            gradeIndex = Number(e.target.value);
+            updateUI();
+        });
+
+        toSelect.addEventListener('change', (e) => {
+            toSystem = e.target.value;
+            updateUI();
+        });
+
+        swapBtn.addEventListener('click', handleSwap);
+
+        // Run setup
+        init();
     </script>
 </body>
 </html>
