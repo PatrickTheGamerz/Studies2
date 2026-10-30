@@ -545,15 +545,21 @@
 
         // --- Loader Fallback Guarantee ---
         let loaderTimeout = setTimeout(() => {
+            console.warn("Loader timed out. Forcefully unlocking UI.");
             hideLoader();
-            console.warn("Loader timed out. Proceeding to unlock UI.");
-        }, 4000); // 4 seconds max wait time
+            if (!state.activeNotebookId) {
+                renderDesk(); // Ensure the desk renders even if data failed to load
+            }
+        }, 3500); // 3.5 seconds max wait time
 
         function hideLoader() {
             clearTimeout(loaderTimeout);
-            if (els.loader.style.display === 'none') return;
+            if (els.loader.style.display === 'none' || els.loader.classList.contains('hidden')) return;
             els.loader.style.opacity = '0';
-            setTimeout(() => els.loader.style.display = 'none', 500);
+            setTimeout(() => {
+                els.loader.style.display = 'none';
+                els.loader.classList.add('hidden');
+            }, 500);
         }
 
         // --- Authentication (Strict handling for cross-session) ---
@@ -576,6 +582,7 @@
                 startDataListeners();
             } else {
                 hideLoader(); // if null, unlock UI
+                renderDesk();
             }
         });
 
@@ -601,6 +608,7 @@
             }, (err) => {
                 console.error("Notebooks Sync Error:", err);
                 hideLoader(); // Hide successfully on error
+                renderDesk(); // Guarantee UI unlocks on error
             });
 
             // Pages
