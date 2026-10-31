@@ -485,17 +485,13 @@
 
     <!-- Firebase SDKs (v11 Modular) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-notebook-premium';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        let db = null;
+        let auth = null;
+        let isCloud = false;
 
         const state = {
             user: null,
@@ -546,10 +542,7 @@
         // --- Loader Fallback Guarantee ---
         let loaderTimeout = setTimeout(() => {
             console.warn("Loader timed out. Forcefully unlocking UI.");
-            hideLoader();
-            if (!state.activeNotebookId) {
-                renderDesk(); // Ensure the desk renders even if data failed to load
-            }
+            fallbackToLocal();
         }, 3500); // 3.5 seconds max wait time
 
         function hideLoader() {
@@ -562,34 +555,57 @@
             }, 500);
         }
 
-        // --- Authentication (Strict handling for cross-session) ---
-        async function initAuth() {
+        function fallbackToLocal() {
+            isCloud = false;
+            hideLoader();
+            els.syncStatus.innerHTML = `<i data-lucide="hard-drive" class="w-3 h-3"></i> <span>Local Mode</span>`;
+            els.syncStatus.className = 'sync-status saved';
+            lucide.createIcons();
+            if (!state.activeNotebookId) renderDesk();
+        }
+
+        // --- Authentication & Boot ---
+        async function boot() {
             try {
+                if (!firebaseConfigStr) throw new Error("No Firebase config provided.");
+                const firebaseConfig = JSON.parse(firebaseConfigStr);
+
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
+                const { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
+                const { getFirestore, collection, doc, setDoc, onSnapshot, addDoc, updateDoc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                window.fbApi = { collection, doc, setDoc, onSnapshot, addDoc, updateDoc, deleteDoc };
+
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        state.user = user;
+                        isCloud = true;
+                        startDataListeners();
+                    } else {
+                        fallbackToLocal();
+                    }
+                });
             } catch (error) {
-                console.error('Auth error, attempting fallback:', error);
-                await signInAnonymously(auth);
+                console.warn('Cloud Storage initialization failed. Using local mode.', error);
+                fallbackToLocal();
             }
         }
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                state.user = user;
-                startDataListeners();
-            } else {
-                hideLoader(); // if null, unlock UI
-                renderDesk();
-            }
-        });
-
         // --- Data Listeners ---
         function startDataListeners() {
-            if (!state.user) return;
+            if (!state.user || !isCloud) return;
             const uid = state.user.uid;
+            const { collection, onSnapshot } = window.fbApi;
 
             // Notebooks
             const nbRef = collection(db, 'artifacts', appId, 'users', uid, 'notebooks');
@@ -607,8 +623,7 @@
                 }
             }, (err) => {
                 console.error("Notebooks Sync Error:", err);
-                hideLoader(); // Hide successfully on error
-                renderDesk(); // Guarantee UI unlocks on error
+                fallbackToLocal();
             });
 
             // Pages
@@ -831,7 +846,7 @@
                 els.syncStatus.innerHTML = `<i data-lucide="cloud-upload" class="w-3 h-3 animate-pulse"></i> <span>Saving...</span>`;
             } else if (status === 'saved') {
                 els.syncStatus.className = 'sync-status saved';
-                els.syncStatus.innerHTML = `<i data-lucide="cloud-lightning" class="w-3 h-3"></i> <span>Cloud Synced</span>`;
+                els.syncStatus.innerHTML = `<i data-lucide="${isCloud ? 'cloud-lightning' : 'hard-drive'}" class="w-3 h-3"></i> <span>${isCloud ? 'Cloud Synced' : 'Locally Saved'}</span>`;
             }
             lucide.createIcons();
         }
@@ -840,23 +855,43 @@
             setSyncStatus('syncing');
             clearTimeout(state.typingTimer);
             state.typingTimer = setTimeout(saveCurrentPage, 800); 
+            
+            if (!isCloud) {
+                const page = state.pages.find(p => p.id === state.activePageId);
+                if (page) {
+                    page.title = els.editorTitle.value;
+                    page.content = els.editorTextarea.value;
+                }
+            }
         };
 
         async function saveCurrentPage() {
-            if (!state.user || !state.activePageId) return;
+            if (!state.activePageId) return;
             const title = els.editorTitle.value;
             const content = els.editorTextarea.value;
             
-            try {
-                await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
-                    title, content, updatedAt: Date.now()
-                });
+            if (isCloud && state.user) {
+                try {
+                    const { doc, updateDoc } = window.fbApi;
+                    await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
+                        title, content, updatedAt: Date.now()
+                    });
+                    setTimeout(() => setSyncStatus('saved'), 300);
+                } catch (e) { console.error("Save error:", e); }
+            } else {
+                const page = state.pages.find(p => p.id === state.activePageId);
+                if (page) {
+                    page.title = title;
+                    page.content = content;
+                    page.updatedAt = Date.now();
+                }
                 setTimeout(() => setSyncStatus('saved'), 300);
-            } catch (e) { console.error("Save error:", e); }
+                renderIndex(); 
+            }
         }
 
         window.updatePageProperty = async function(property, value) {
-            if (!state.user || !state.activePageId) return;
+            if (!state.activePageId) return;
             setSyncStatus('syncing');
             
             const currPage = state.pages.find(p => p.id === state.activePageId);
@@ -867,32 +902,46 @@
                 renderIndex(); 
             }
 
-            try {
-                await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
-                    [property]: value, updatedAt: Date.now()
-                });
+            if (isCloud && state.user) {
+                try {
+                    const { doc, updateDoc } = window.fbApi;
+                    await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
+                        [property]: value, updatedAt: Date.now()
+                    });
+                    setTimeout(() => setSyncStatus('saved'), 300);
+                } catch (e) { console.error("Property update error:", e); }
+            } else {
                 setTimeout(() => setSyncStatus('saved'), 300);
-            } catch (e) { console.error("Property update error:", e); }
+            }
         };
 
         window.createNewPage = async function() {
-            if (!state.user || !state.activeNotebookId) return;
-            try {
-                const newRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), {
-                    notebookId: state.activeNotebookId,
-                    title: 'Untitled Entry',
-                    content: '',
-                    style: 'lined',
-                    font: 'sans',
-                    createdAt: Date.now(),
-                    updatedAt: Date.now()
-                });
-                openPage(newRef.id);
-            } catch(e) { console.error("Create page error:", e); }
+            if (!state.activeNotebookId) return;
+            const newPageData = {
+                notebookId: state.activeNotebookId,
+                title: 'Untitled Entry',
+                content: '',
+                style: 'lined',
+                font: 'sans',
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            if (isCloud && state.user) {
+                try {
+                    const { collection, addDoc } = window.fbApi;
+                    const newRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), newPageData);
+                    openPage(newRef.id);
+                } catch(e) { console.error("Create page error:", e); }
+            } else {
+                const newId = 'local_pg_' + Date.now();
+                state.pages.push({ id: newId, ...newPageData });
+                openPage(newId);
+            }
         };
 
         window.deleteCurrentPage = async function() {
-            if (!state.user || !state.activePageId) return;
+            if (!state.activePageId) return;
             const btn = document.querySelector('#floating-toolbar button.text-red-400');
             
             if (!btn.dataset.confirm) {
@@ -913,23 +962,41 @@
                 return;
             }
 
-            try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId));
-                state.activePageId = null;
-                btn.removeAttribute('data-confirm');
-                btn.classList.remove('bg-red-600', 'text-white');
-                btn.classList.add('text-red-400', 'hover:bg-red-500');
-                btn.innerHTML = `<i data-lucide="trash-2" class="w-4 h-4"></i>`;
-                lucide.createIcons();
-            } catch(e) { console.error(e); }
+            if (isCloud && state.user) {
+                try {
+                    const { doc, deleteDoc } = window.fbApi;
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId));
+                } catch(e) { console.error(e); }
+            } else {
+                state.pages = state.pages.filter(p => p.id !== state.activePageId);
+            }
+            
+            state.activePageId = null;
+            btn.removeAttribute('data-confirm');
+            btn.classList.remove('bg-red-600', 'text-white');
+            btn.classList.add('text-red-400', 'hover:bg-red-500');
+            btn.innerHTML = `<i data-lucide="trash-2" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+            
+            if (!isCloud) {
+                renderIndex();
+                renderEditor();
+            }
         };
 
         window.deleteNotebook = async function(id) {
-            if(!state.user) return;
-            try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks', id));
+            if (isCloud && state.user) {
+                try {
+                    const { doc, deleteDoc } = window.fbApi;
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks', id));
+                    if(state.activeNotebookId === id) goHome();
+                } catch(e) { console.error(e); }
+            } else {
+                state.notebooks = state.notebooks.filter(n => n.id !== id);
+                state.pages = state.pages.filter(p => p.notebookId !== id);
+                renderDesk();
                 if(state.activeNotebookId === id) goHome();
-            } catch(e) { console.error(e); }
+            }
         };
 
         // --- Modals & Mobile ---
@@ -971,34 +1038,53 @@
         };
 
         window.createNotebook = async function() {
-            if (!state.user) return;
             const name = els.newNbName.value.trim();
             if (!name) return;
 
             const btnSubmit = document.getElementById('btn-create-submit');
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = `<div class="loader w-5 h-5 mx-auto border-t-white"></div>`;
+            
+            const nbData = { name, color: state.selectedColor, createdAt: Date.now() };
+            const pageData = {
+                title: 'Prologue',
+                content: 'Welcome to your new journal.\n\nAll modifications you make are instantly synchronized securely to the cloud. Notice the indicator in the bottom right validating your saves.\n\nUse the glass dock below to customize your paper and font.',
+                style: 'lined',
+                font: 'serif',
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
 
-            try {
-                const nbRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks'), {
-                    name, color: state.selectedColor, createdAt: Date.now()
-                });
+            if (isCloud && state.user) {
+                try {
+                    const { collection, addDoc } = window.fbApi;
+                    const nbRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks'), nbData);
+                    pageData.notebookId = nbRef.id;
+                    await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), pageData);
 
-                await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), {
-                    notebookId: nbRef.id,
-                    title: 'Prologue',
-                    content: 'Welcome to your new journal.\n\nAll modifications you make are instantly synchronized securely to the cloud. Notice the indicator in the bottom right validating your saves.\n\nUse the glass dock below to customize your paper and font.',
-                    style: 'lined',
-                    font: 'serif',
-                    createdAt: Date.now(),
-                    updatedAt: Date.now()
-                });
-
+                    closeModal();
+                    openNotebook(nbRef.id);
+                } catch(e) {
+                    console.error(e);
+                } finally {
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = 'Bind Journal';
+                }
+            } else {
+                const nbId = 'local_nb_' + Date.now();
+                const pgId = 'local_pg_' + Date.now();
+                
+                nbData.id = nbId;
+                pageData.id = pgId;
+                pageData.notebookId = nbId;
+                
+                state.notebooks.push(nbData);
+                state.pages.push(pageData);
+                
                 closeModal();
-                openNotebook(nbRef.id);
-            } catch(e) {
-                console.error(e);
-            } finally {
+                renderDesk();
+                openNotebook(nbId);
+                
                 btnSubmit.disabled = false;
                 btnSubmit.textContent = 'Bind Journal';
             }
@@ -1048,7 +1134,7 @@
         }
 
         lucide.createIcons();
-        initAuth();
+        boot();
 
     </script>
 </body>
