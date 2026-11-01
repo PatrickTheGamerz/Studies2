@@ -423,7 +423,14 @@
             </div>
             
             <!-- Unobtrusive Floating Dock Toolbar (Bottom Center) -->
-            <div id="floating-toolbar" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 glass-dock rounded-[20px] px-5 py-3.5 flex items-center gap-5 transition-transform duration-500 translate-y-32 opacity-0">
+            <div id="floating-toolbar" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 glass-dock rounded-[20px] px-3 py-3.5 flex items-center gap-4 transition-opacity duration-300 opacity-0 pointer-events-none select-none">
+                
+                <!-- Drag Handle -->
+                <div id="drag-handle" class="px-2 cursor-grab active:cursor-grabbing text-white/50 hover:text-white flex items-center justify-center transition-colors" title="Drag to move">
+                    <i data-lucide="grip-vertical" class="w-5 h-5"></i>
+                </div>
+                
+                <div class="w-px h-8 bg-white/20"></div>
                 
                 <!-- Font Toggle -->
                 <div class="flex gap-1.5 bg-white/20 rounded-xl p-1 shadow-inner">
@@ -543,7 +550,7 @@
         let loaderTimeout = setTimeout(() => {
             console.warn("Loader timed out. Forcefully unlocking UI.");
             fallbackToLocal();
-        }, 3500); // 3.5 seconds max wait time
+        }, 15000); // Increased to 15 seconds to prevent premature disconnects and ensure permanent saving
 
         function hideLoader() {
             clearTimeout(loaderTimeout);
@@ -736,8 +743,7 @@
         window.goHome = function() {
             state.activeNotebookId = null;
             state.activePageId = null;
-            els.floatingToolbar.classList.remove('translate-y-0', 'opacity-100');
-            els.floatingToolbar.classList.add('translate-y-32', 'opacity-0');
+            els.floatingToolbar.classList.add('opacity-0', 'pointer-events-none');
             renderDesk();
         };
 
@@ -784,8 +790,7 @@
                 els.emptyPageState.classList.remove('hidden');
                 els.emptyPageState.classList.add('flex');
                 els.syncStatus.classList.add('hidden');
-                els.floatingToolbar.classList.remove('translate-y-0', 'opacity-100');
-                els.floatingToolbar.classList.add('translate-y-32', 'opacity-0');
+                els.floatingToolbar.classList.add('opacity-0', 'pointer-events-none');
                 return;
             }
 
@@ -801,8 +806,7 @@
             applyPageStyles(page);
             updateToolbarUI(page);
 
-            els.floatingToolbar.classList.remove('translate-y-32', 'opacity-0');
-            els.floatingToolbar.classList.add('translate-y-0', 'opacity-100');
+            els.floatingToolbar.classList.remove('opacity-0', 'pointer-events-none');
         }
 
         function applyPageStyles(page) {
@@ -1131,6 +1135,69 @@
 
         function escapeHtml(unsafe) {
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // --- Toolbar Drag Logic ---
+        let isDragging = false;
+        let dragStartX, dragStartY;
+
+        const dragHandle = document.getElementById('drag-handle');
+
+        dragHandle.addEventListener('mousedown', startDrag);
+        dragHandle.addEventListener('touchstart', startDrag, { passive: false });
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            
+            dragStartX = clientX;
+            dragStartY = clientY;
+            
+            const rect = els.floatingToolbar.getBoundingClientRect();
+            
+            // Remove automatic centering classes so it can freely float via JS coordinates
+            els.floatingToolbar.classList.remove('bottom-12', 'left-1/2', '-translate-x-1/2');
+            
+            els.floatingToolbar.style.left = rect.left + 'px';
+            els.floatingToolbar.style.top = rect.top + 'px';
+            els.floatingToolbar.style.bottom = 'auto';
+            els.floatingToolbar.style.right = 'auto';
+
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('touchmove', onDrag, { passive: false });
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            
+            const dx = clientX - dragStartX;
+            const dy = clientY - dragStartY;
+            
+            dragStartX = clientX;
+            dragStartY = clientY;
+            
+            const currentLeft = parseFloat(els.floatingToolbar.style.left) || 0;
+            const currentTop = parseFloat(els.floatingToolbar.style.top) || 0;
+            
+            els.floatingToolbar.style.left = (currentLeft + dx) + 'px';
+            els.floatingToolbar.style.top = (currentTop + dy) + 'px';
+        }
+
+        function endDrag() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('touchmove', onDrag);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchend', endDrag);
         }
 
         lucide.createIcons();
