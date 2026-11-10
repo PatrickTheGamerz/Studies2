@@ -21,6 +21,7 @@
             --paper-color: #FDFBF7;
             --line-height: 28px;
             --leather-base: #1a1a1a;
+            --dock-scale: 1;
         }
 
         body {
@@ -28,33 +29,34 @@
             padding: 0;
             overflow: hidden;
             font-family: 'Inter', sans-serif;
-            background-color: #1a1412;
-            /* Ultra-realistic wood grain desk */
+            background-color: #140e0c;
+            /* Ultra-realistic wood grain desk with lighting vignette */
             background-image: 
-                radial-gradient(circle at 50% -20%, rgba(255,255,255,0.05) 0%, transparent 60%),
-                radial-gradient(circle at 50% 100%, rgba(0,0,0,0.8) 0%, transparent 80%),
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.4' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0, 0 0.8 0 0 0, 0 0.6 0 0 0, 0 0 0 0.15 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+                radial-gradient(circle at 50% 20%, rgba(255,225,180,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(0,0,0,0.95) 0%, transparent 80%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01 0.35' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0, 0 0.75 0 0 0, 0 0.5 0 0 0, 0 0 0 0.18 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
             color: #e2e8f0;
+            user-select: none;
         }
 
         /* --- Photorealistic Textures --- */
         .leather-texture {
-            background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23noise)' opacity='0.18'/%3E%3C/svg%3E");
             mix-blend-mode: multiply;
         }
 
         .paper-texture {
             background-color: var(--paper-color);
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
         }
 
         .gold-foil {
             color: #D4AF37;
             text-shadow: 
                 -1px -1px 0 rgba(255,255,255,0.4),
-                1px 1px 1px rgba(0,0,0,0.7),
-                0 2px 4px rgba(0,0,0,0.5);
-            background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+                1px 1px 1px rgba(0,0,0,0.8),
+                0 2px 6px rgba(0,0,0,0.6);
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -63,19 +65,20 @@
         .book-closed {
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
             border-radius: 4px 18px 18px 4px;
             box-shadow: 
-                15px 15px 25px rgba(0,0,0,0.7),
+                12px 18px 28px rgba(0,0,0,0.75),
                 inset 2px 0 5px rgba(255,255,255,0.2),
                 inset -3px 0 6px rgba(0,0,0,0.4);
-            border-left: 1px solid rgba(255,255,255,0.1);
+            border-left: 1px solid rgba(255,255,255,0.12);
         }
         
         .book-closed:hover {
-            transform: translateY(-12px) scale(1.03) rotateY(-8deg) rotateX(2deg);
+            transform: translateY(-10px) scale(1.03) rotateY(-6deg) rotateX(2deg);
             box-shadow: 
-                25px 25px 40px rgba(0,0,0,0.8),
+                22px 28px 42px rgba(0,0,0,0.85),
+                0 0 20px rgba(212,175,55,0.2),
                 inset 2px 0 5px rgba(255,255,255,0.3),
                 inset -3px 0 6px rgba(0,0,0,0.4);
         }
@@ -96,7 +99,7 @@
                 #d1d5db 2px
             );
             border-radius: 0 4px 4px 0;
-            box-shadow: inset 2px 0 4px rgba(0,0,0,0.3);
+            box-shadow: inset 2px 0 4px rgba(0,0,0,0.35);
             border-top: 1px solid rgba(0,0,0,0.4);
             border-bottom: 1px solid rgba(0,0,0,0.4);
             transform-origin: left;
@@ -110,9 +113,9 @@
             top: 0;
             bottom: 0;
             width: 32px;
-            background: linear-gradient(to right, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.5) 15%, rgba(0,0,0,0.2) 100%);
+            background: linear-gradient(to right, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.55) 20%, rgba(0,0,0,0.25) 100%);
             border-radius: 4px 0 0 4px;
-            border-right: 2px solid rgba(0,0,0,0.3);
+            border-right: 2px solid rgba(0,0,0,0.35);
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -123,18 +126,18 @@
         .spine-rib {
             width: 100%;
             height: 4px;
-            background: rgba(0,0,0,0.2);
-            border-top: 1px solid rgba(255,255,255,0.15);
-            border-bottom: 1px solid rgba(0,0,0,0.6);
-            box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(0,0,0,0.7);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         /* --- Photorealistic Open Book --- */
         .open-book-container {
             border-radius: 16px;
             box-shadow: 
-                0 40px 80px rgba(0,0,0,0.9),
-                0 0 0 6px rgba(255,255,255,0.03);
+                0 40px 90px rgba(0,0,0,0.95),
+                0 0 0 1px rgba(255,255,255,0.08);
             background: #111; 
             padding: 10px; 
             position: relative;
@@ -142,14 +145,14 @@
 
         .page-left {
             border-radius: 6px 0 0 6px;
-            box-shadow: inset -20px 0 40px -10px rgba(0,0,0,0.12);
+            box-shadow: inset -20px 0 40px -10px rgba(0,0,0,0.14);
             background-image: 
                 linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 80%, rgba(0,0,0,0.08) 100%);
         }
 
         .page-right {
             border-radius: 0 6px 6px 0;
-            box-shadow: inset 20px 0 40px -10px rgba(0,0,0,0.12);
+            box-shadow: inset 20px 0 40px -10px rgba(0,0,0,0.14);
             background-image: 
                 linear-gradient(to left, rgba(0,0,0,0.02) 0%, transparent 80%, rgba(0,0,0,0.08) 100%);
         }
@@ -165,9 +168,9 @@
             background: linear-gradient(to right, 
                 transparent 0%, 
                 rgba(0,0,0,0.1) 35%, 
-                rgba(0,0,0,0.6) 48%, 
-                rgba(0,0,0,0.9) 50%, 
-                rgba(0,0,0,0.6) 52%, 
+                rgba(0,0,0,0.65) 48%, 
+                rgba(0,0,0,0.95) 50%, 
+                rgba(0,0,0,0.65) 52%, 
                 rgba(0,0,0,0.1) 65%, 
                 transparent 100%);
             pointer-events: none;
@@ -178,14 +181,14 @@
         .bookmark-ribbon {
             position: absolute;
             top: -10px;
-            right: 40px;
+            right: 45px;
             width: 24px;
-            height: 80px;
+            height: 90px;
             background: #991b1b;
-            box-shadow: 2px 5px 10px rgba(0,0,0,0.4);
-            z-index: 5;
+            box-shadow: 3px 6px 12px rgba(0,0,0,0.5);
+            z-index: 25;
             border-radius: 0 0 4px 4px;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, transparent 20%, rgba(0,0,0,0.4) 100%);
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 20%, rgba(0,0,0,0.45) 100%);
         }
         .bookmark-ribbon::after {
             content: '';
@@ -200,17 +203,17 @@
 
         /* --- Paper Styles (Ruling) --- */
         .style-lined {
-            background-image: linear-gradient(transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.4) calc(var(--line-height) - 1px));
+            background-image: linear-gradient(transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.45) calc(var(--line-height) - 1px));
             background-size: 100% var(--line-height);
         }
         .style-grid {
             background-image: 
-                linear-gradient(transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.3) calc(var(--line-height) - 1px)),
-                linear-gradient(90deg, transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.3) calc(var(--line-height) - 1px));
+                linear-gradient(transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.35) calc(var(--line-height) - 1px)),
+                linear-gradient(90deg, transparent calc(var(--line-height) - 1px), rgba(148, 163, 184, 0.35) calc(var(--line-height) - 1px));
             background-size: var(--line-height) var(--line-height);
         }
         .style-dotted {
-            background-image: radial-gradient(rgba(148, 163, 184, 0.7) 1.5px, transparent 1.5px);
+            background-image: radial-gradient(rgba(148, 163, 184, 0.75) 1.5px, transparent 1.5px);
             background-size: var(--line-height) var(--line-height);
             background-position: -1.5px -1.5px;
         }
@@ -218,7 +221,7 @@
             background-image: none;
         }
 
-        /* Perfect Typography Alignment */
+        /* Typography */
         #editor-textarea {
             line-height: var(--line-height);
             padding-top: calc(var(--line-height) * 0.2); 
@@ -226,25 +229,38 @@
             color: #1e293b;
             resize: none;
             background: transparent;
+            user-select: text;
         }
 
-        /* Scrollbars */
+        /* Custom Scrollbars */
         #editor-textarea::-webkit-scrollbar, .custom-scroll::-webkit-scrollbar { width: 6px; }
         #editor-textarea::-webkit-scrollbar-track, .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        #editor-textarea::-webkit-scrollbar-thumb, .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
-        
+        #editor-textarea::-webkit-scrollbar-thumb, .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 10px; }
+        #editor-textarea::-webkit-scrollbar-thumb:hover, .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+
         /* Fonts */
         .font-sans { font-family: 'Inter', sans-serif; }
         .font-serif { font-family: 'Playfair Display', serif; }
-        .font-hand { font-family: 'Caveat', cursive; font-size: 22px !important; }
+        .font-hand { font-family: 'Caveat', cursive; font-size: 23px !important; }
 
-        /* Glassmorphism */
+        /* Enhanced Glassmorphism Dock */
         .glass-dock {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            background: rgba(18, 18, 20, 0.65);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            transform: scale(var(--dock-scale));
+            transform-origin: center center;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+        .glass-dock:hover {
+            box-shadow: 
+                0 25px 60px rgba(0,0,0,0.7),
+                0 0 25px rgba(212,175,55,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.3);
         }
 
         .red-margin {
@@ -253,50 +269,52 @@
             top: 0;
             bottom: 0;
             width: 1px;
-            background-color: rgba(239, 68, 68, 0.3);
+            background-color: rgba(239, 68, 68, 0.35);
             z-index: 0;
             pointer-events: none;
-            box-shadow: 2px 0 0 rgba(239, 68, 68, 0.1);
+            box-shadow: 2px 0 0 rgba(239, 68, 68, 0.12);
         }
 
         /* Sync Status Pill */
         .sync-status {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.05);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
+            bottom: 14px;
+            right: 14px;
+            background: rgba(255,255,255,0.7);
+            padding: 5px 12px;
+            border-radius: 14px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             display: flex;
-            items-center;
+            align-items: center;
             gap: 6px;
-            color: #64748b;
+            color: #475569;
             transition: all 0.3s ease;
             z-index: 50;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        .sync-status.syncing { color: #d97706; background: rgba(217, 119, 6, 0.1); }
-        .sync-status.saved { color: #059669; background: rgba(5, 150, 105, 0.1); }
+        .sync-status.syncing { color: #d97706; background: rgba(254, 243, 199, 0.9); }
+        .sync-status.saved { color: #047857; background: rgba(209, 250, 229, 0.9); }
 
-        /* Loader */
+        /* Animated Spinner */
         .loader {
-            border: 3px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(255,255,255,0.12);
             border-top: 3px solid #d4af37;
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
+            animation: spin 0.9s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 768px) {
-            .open-book-container { padding: 4px; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+            .open-book-container { padding: 4px; border-radius: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.85); }
             #editor-textarea { padding-left: 20px; padding-right: 20px; }
             .red-margin, .bookmark-ribbon { display: none; }
         }
@@ -308,42 +326,51 @@
     <div id="app" class="flex-1 w-full h-full flex flex-col relative overflow-hidden z-10">
         
         <!-- Loading Overlay -->
-        <div id="loading-overlay" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-[#1a1412] text-white transition-opacity duration-500">
+        <div id="loading-overlay" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-[#140e0c] text-white transition-opacity duration-500">
             <div class="loader mb-6"></div>
-            <p class="font-serif text-xl text-[#d4af37] tracking-widest uppercase mb-2">Syncing Desk...</p>
-            <p class="text-xs text-white/40 font-mono">Connecting to Cloud Storage</p>
+            <p class="font-serif text-xl text-[#d4af37] tracking-widest uppercase mb-2">Preparing Workspace...</p>
+            <p class="text-xs text-white/40 font-mono">Restoring Your Notebooks</p>
         </div>
 
         <!-- Header -->
         <header class="w-full flex-none px-6 py-5 flex items-center justify-between z-20 transition-all duration-300">
             <div class="flex items-center gap-4 cursor-pointer group" onclick="goHome()">
-                <div class="bg-black/30 p-2 rounded-lg border border-white/10 group-hover:border-white/30 transition-colors">
-                    <i data-lucide="book-open" class="text-[#d4af37]"></i>
+                <div class="bg-black/40 p-2.5 rounded-xl border border-white/10 group-hover:border-[#d4af37]/50 transition-colors shadow-lg">
+                    <i data-lucide="book-open" class="text-[#d4af37] w-6 h-6"></i>
                 </div>
-                <h1 class="text-2xl md:text-3xl font-serif font-bold tracking-wide text-white/95 drop-shadow-md">Atelier Notebooks</h1>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-serif font-bold tracking-wide text-white/95 drop-shadow-md">Atelier Notebooks</h1>
+                    <p class="text-[10px] uppercase tracking-widest text-white/40 font-mono">Personal Digital Journal</p>
+                </div>
             </div>
-            <button id="btn-back" onclick="goHome()" class="hidden flex items-center gap-2 bg-black/40 border border-white/10 hover:bg-white/10 px-5 py-2.5 rounded-full transition-all text-sm font-bold shadow-lg">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i> Close Book
-            </button>
+
+            <div class="flex items-center gap-3">
+                <button id="btn-export-page" onclick="exportCurrentPage()" class="hidden flex items-center gap-2 bg-black/40 border border-white/10 hover:bg-white/10 px-4 py-2.5 rounded-full transition-all text-xs font-bold text-white/90 shadow-lg" title="Export Current Page">
+                    <i data-lucide="download" class="w-4 h-4 text-[#d4af37]"></i> Export
+                </button>
+                <button id="btn-back" onclick="goHome()" class="hidden flex items-center gap-2 bg-black/40 border border-white/10 hover:bg-white/10 px-5 py-2.5 rounded-full transition-all text-sm font-bold shadow-lg text-white">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> Close Book
+                </button>
+            </div>
         </header>
 
         <!-- VIEW: Desk (Grid of Notebooks) -->
         <main id="view-desk" class="flex-1 overflow-y-auto w-full max-w-7xl mx-auto p-6 md:p-12 hidden custom-scroll">
-            <div id="empty-desk-state" class="hidden flex-col items-center justify-center mt-32 text-center text-white/50">
-                <div class="bg-black/20 p-8 rounded-full mb-6 border border-white/5 shadow-inner">
+            <div id="empty-desk-state" class="hidden flex-col items-center justify-center mt-28 text-center text-white/50">
+                <div class="bg-black/30 p-8 rounded-full mb-6 border border-white/10 shadow-2xl">
                     <i data-lucide="book-dashed" class="w-20 h-20 opacity-40 text-[#d4af37]"></i>
                 </div>
-                <h2 class="text-4xl font-serif mb-3 text-white/90">A Clear Desk</h2>
-                <p class="mb-10 max-w-md mx-auto text-lg text-white/60">Craft a premium journal to automatically sync your thoughts across devices.</p>
-                <button onclick="showCreateModal()" class="bg-[#d4af37] hover:bg-[#c29c2a] text-black px-10 py-4 rounded-full font-bold flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-transform hover:-translate-y-1">
+                <h2 class="text-4xl font-serif mb-3 text-white/95">A Blank Canvas</h2>
+                <p class="mb-10 max-w-md mx-auto text-base text-white/60 leading-relaxed">Craft your first journal below. Every entry automatically stays saved directly in your browser.</p>
+                <button onclick="showCreateModal()" class="bg-[#d4af37] hover:bg-[#c29c2a] text-black px-10 py-4 rounded-full font-bold flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.35)] transition-all hover:-translate-y-1">
                     <i data-lucide="plus" class="w-5 h-5"></i> Craft Journal
                 </button>
             </div>
 
             <div id="notebook-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-8 gap-y-12 hidden pb-20 pt-4 px-4">
                 <!-- Create New Card -->
-                <div onclick="showCreateModal()" class="w-full aspect-[3/4] border-2 border-dashed border-white/20 rounded-r-2xl rounded-l-md flex flex-col items-center justify-center text-white/40 hover:text-[#d4af37] hover:border-[#d4af37]/50 cursor-pointer transition-all hover:bg-white/5 group shadow-lg">
-                    <i data-lucide="plus" class="w-12 h-12 mb-4 group-hover:scale-110 transition-transform"></i>
+                <div onclick="showCreateModal()" class="w-full aspect-[3/4] border-2 border-dashed border-white/25 rounded-r-2xl rounded-l-md flex flex-col items-center justify-center text-white/40 hover:text-[#d4af37] hover:border-[#d4af37]/60 cursor-pointer transition-all hover:bg-white/5 group shadow-lg">
+                    <i data-lucide="plus" class="w-12 h-12 mb-3 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-xs uppercase tracking-widest">New Journal</span>
                 </div>
                 <!-- Dynamic Books injected here -->
@@ -355,7 +382,7 @@
             
             <!-- Mobile View Toggle -->
             <div class="md:hidden flex justify-center mb-6 z-20">
-                <div class="bg-black/40 backdrop-blur-md rounded-full p-1 flex shadow-lg border border-white/10">
+                <div class="bg-black/50 backdrop-blur-md rounded-full p-1 flex shadow-xl border border-white/10">
                     <button id="btn-tab-index" onclick="setMobileTab('index')" class="px-8 py-2.5 rounded-full text-sm font-bold bg-[#FDFBF7] text-black transition-colors">Index</button>
                     <button id="btn-tab-page" onclick="setMobileTab('page')" class="px-8 py-2.5 rounded-full text-sm font-bold text-white transition-colors">Page</button>
                 </div>
@@ -370,12 +397,12 @@
 
                 <!-- Left Page: Index -->
                 <div id="page-left" class="flex-1 paper-texture page-left flex flex-col relative z-10 overflow-hidden hidden md:flex border-r border-black/10">
-                    <div class="px-10 py-12 border-b border-gray-300/40 relative">
-                        <div class="w-12 h-1 bg-[#d4af37] mb-6 rounded-full opacity-80"></div>
-                        <h2 id="notebook-title-display" class="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-tight leading-none mb-4">...</h2>
-                        <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest mt-6">
+                    <div class="px-10 py-10 border-b border-gray-300/50 relative">
+                        <div class="w-12 h-1 bg-[#d4af37] mb-5 rounded-full opacity-90 shadow-sm"></div>
+                        <h2 id="notebook-title-display" class="text-3xl md:text-4xl font-serif font-bold text-gray-900 tracking-tight leading-tight mb-3 truncate">...</h2>
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest mt-4">
                             <span>Table of Contents</span>
-                            <span id="page-count" class="bg-gray-200/60 px-3 py-1.5 rounded-md shadow-inner border border-gray-300/50 text-gray-700">0 Pages</span>
+                            <span id="page-count" class="bg-gray-200/80 px-3 py-1 rounded-md shadow-inner border border-gray-300/60 text-gray-700">0 Pages</span>
                         </div>
                     </div>
                     
@@ -383,8 +410,8 @@
                         <!-- Dynamic list of pages -->
                     </div>
 
-                    <div class="p-6 bg-gradient-to-t from-gray-100/80 to-transparent">
-                        <button onclick="createNewPage()" class="w-full flex items-center justify-center gap-2 py-4 bg-gray-900 text-white rounded-xl hover:bg-gray-800 font-bold shadow-lg transition-transform active:scale-95 group">
+                    <div class="p-6 bg-gradient-to-t from-gray-200/80 to-transparent">
+                        <button onclick="createNewPage()" class="w-full flex items-center justify-center gap-2 py-3.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 font-bold shadow-xl transition-all active:scale-95 group">
                             <i data-lucide="pen-tool" class="w-4 h-4 group-hover:-rotate-12 transition-transform"></i> Inscribe New Page
                         </button>
                     </div>
@@ -393,12 +420,12 @@
                 <!-- Right Page: Editor -->
                 <div id="page-right" class="flex-1 paper-texture page-right flex flex-col relative z-10 overflow-hidden flex">
                     
-                    <!-- Cloud Sync Status Indicator -->
+                    <!-- Sync Status Indicator -->
                     <div id="sync-status" class="sync-status saved hidden">
-                        <i data-lucide="cloud-lightning" class="w-3 h-3"></i> <span>Saved</span>
+                        <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i> <span id="sync-status-text">Locally Saved</span>
                     </div>
 
-                    <!-- Red Margin (Only visible if style is lined) -->
+                    <!-- Red Margin -->
                     <div id="red-margin" class="red-margin hidden md:block"></div>
                     
                     <div id="empty-page-state" class="hidden flex-1 flex-col items-center justify-center text-gray-400 p-8 text-center">
@@ -408,12 +435,12 @@
 
                     <div id="editor-container" class="flex-1 flex flex-col hidden h-full relative">
                         <!-- Title Input -->
-                        <div class="pt-12 px-8 md:px-[72px] pb-4 relative z-10">
-                            <input type="text" id="editor-title" placeholder="Page Inscription..." class="text-3xl md:text-4xl font-bold bg-transparent border-none outline-none w-full text-gray-900 placeholder-gray-300/60 font-sans tracking-tight" oninput="handleTyping()">
+                        <div class="pt-10 px-8 md:px-[72px] pb-3 relative z-10">
+                            <input type="text" id="editor-title" placeholder="Page Inscription..." class="text-3xl md:text-4xl font-bold bg-transparent border-none outline-none w-full text-gray-900 placeholder-gray-400/50 font-sans tracking-tight" oninput="handleTyping()">
                         </div>
 
                         <!-- Content Textarea -->
-                        <div class="flex-1 relative w-full mt-2">
+                        <div class="flex-1 relative w-full mt-1">
                             <div id="editor-ruling" class="absolute inset-0 z-0 style-lined opacity-80 pointer-events-none"></div>
                             
                             <textarea id="editor-textarea" placeholder="Record your thoughts here..." class="absolute inset-0 w-full h-full z-10 outline-none px-8 md:pl-[72px] md:pr-12 pb-20 custom-scroll font-sans" oninput="handleTyping()"></textarea>
@@ -422,37 +449,46 @@
                 </div>
             </div>
             
-            <!-- Unobtrusive Floating Dock Toolbar (Bottom Center) -->
-            <div id="floating-toolbar" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 glass-dock rounded-[20px] px-3 py-3.5 flex items-center gap-4 transition-opacity duration-300 opacity-0 pointer-events-none select-none">
+            <!-- Resizable & Draggable Floating Glass Dock Toolbar -->
+            <div id="floating-toolbar" class="absolute z-50 glass-dock rounded-[22px] px-3.5 py-3 flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none select-none">
                 
                 <!-- Drag Handle -->
-                <div id="drag-handle" class="px-2 cursor-grab active:cursor-grabbing text-white/50 hover:text-white flex items-center justify-center transition-colors" title="Drag to move">
+                <div id="drag-handle" class="px-2 py-1 cursor-grab active:cursor-grabbing text-white/50 hover:text-white flex items-center justify-center transition-colors" title="Click & Drag to move toolbar">
                     <i data-lucide="grip-vertical" class="w-5 h-5"></i>
                 </div>
                 
-                <div class="w-px h-8 bg-white/20"></div>
+                <div class="w-px h-7 bg-white/20"></div>
                 
                 <!-- Font Toggle -->
-                <div class="flex gap-1.5 bg-white/20 rounded-xl p-1 shadow-inner">
-                    <button onclick="updatePageProperty('font', 'sans')" id="btn-font-sans" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Sans-Serif Font"><span class="font-sans font-bold text-sm">Ag</span></button>
-                    <button onclick="updatePageProperty('font', 'serif')" id="btn-font-serif" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Serif Font"><span class="font-serif font-bold text-base">Ag</span></button>
-                    <button onclick="updatePageProperty('font', 'hand')" id="btn-font-hand" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Handwriting Font"><span class="font-hand font-bold text-lg leading-none pt-1">Ag</span></button>
+                <div class="flex gap-1 bg-white/10 rounded-xl p-1 shadow-inner border border-white/5">
+                    <button onclick="updatePageProperty('font', 'sans')" id="btn-font-sans" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Sans-Serif Font"><span class="font-sans font-bold text-xs">Ag</span></button>
+                    <button onclick="updatePageProperty('font', 'serif')" id="btn-font-serif" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Serif Font"><span class="font-serif font-bold text-sm">Ag</span></button>
+                    <button onclick="updatePageProperty('font', 'hand')" id="btn-font-hand" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Handwriting Font"><span class="font-hand font-bold text-base leading-none pt-1">Ag</span></button>
                 </div>
                 
-                <div class="w-px h-8 bg-white/20"></div>
+                <div class="w-px h-7 bg-white/20"></div>
                 
                 <!-- Style Toggle -->
-                <div class="flex gap-1.5 bg-white/20 rounded-xl p-1 shadow-inner">
-                    <button onclick="updatePageProperty('style', 'lined')" id="btn-style-lined" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Lined Paper"><i data-lucide="align-justify" class="w-4 h-4"></i></button>
-                    <button onclick="updatePageProperty('style', 'grid')" id="btn-style-grid" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Grid Paper"><i data-lucide="grid" class="w-4 h-4"></i></button>
-                    <button onclick="updatePageProperty('style', 'dotted')" id="btn-style-dotted" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Dotted Paper"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
-                    <button onclick="updatePageProperty('style', 'blank')" id="btn-style-blank" class="w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/30 transition-all" title="Blank Paper"><i data-lucide="square" class="w-4 h-4"></i></button>
+                <div class="flex gap-1 bg-white/10 rounded-xl p-1 shadow-inner border border-white/5">
+                    <button onclick="updatePageProperty('style', 'lined')" id="btn-style-lined" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Lined Paper"><i data-lucide="align-justify" class="w-4 h-4"></i></button>
+                    <button onclick="updatePageProperty('style', 'grid')" id="btn-style-grid" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Grid Paper"><i data-lucide="grid" class="w-4 h-4"></i></button>
+                    <button onclick="updatePageProperty('style', 'dotted')" id="btn-style-dotted" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Dotted Paper"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                    <button onclick="updatePageProperty('style', 'blank')" id="btn-style-blank" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Blank Paper"><i data-lucide="square" class="w-4 h-4"></i></button>
                 </div>
 
-                <div class="w-px h-8 bg-white/20"></div>
+                <div class="w-px h-7 bg-white/20"></div>
 
-                <!-- Delete -->
-                <button onclick="deleteCurrentPage()" class="w-10 h-10 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-md bg-white/10" title="Tear Page Out">
+                <!-- Dock Size Control (Zoom / Scale) -->
+                <div class="flex gap-1 bg-white/10 rounded-xl p-1 shadow-inner border border-white/5" title="Dock Display Scale">
+                    <button onclick="changeDockScale(-0.1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Decrease Dock Size"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+                    <span id="dock-scale-label" class="text-[10px] font-mono font-bold text-white/70 flex items-center justify-center px-1">100%</span>
+                    <button onclick="changeDockScale(0.1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all" title="Increase Dock Size"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+                </div>
+
+                <div class="w-px h-7 bg-white/20"></div>
+
+                <!-- Tear Out / Delete -->
+                <button onclick="deleteCurrentPage()" class="w-9 h-9 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-md bg-white/10" title="Tear Page Out">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -460,8 +496,8 @@
     </div>
 
     <!-- Create Notebook Modal -->
-    <div id="create-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-[200] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-[#FDFBF7] rounded-[24px] p-8 md:p-10 max-w-lg w-full shadow-[0_20px_60px_rgba(0,0,0,0.5)] relative transform scale-95 transition-transform duration-300 border border-white" id="create-modal-content">
+    <div id="create-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-[200] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-[#FDFBF7] rounded-[24px] p-8 md:p-10 max-w-lg w-full shadow-[0_25px_70px_rgba(0,0,0,0.6)] relative transform scale-95 transition-transform duration-300 border border-white" id="create-modal-content">
             <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-900 bg-gray-200/50 hover:bg-gray-200 rounded-full transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -490,8 +526,9 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs (v11 Modular) -->
+    <!-- Application Script -->
     <script type="module">
+        const LOCAL_STORAGE_KEY = 'atelier_smart_notebooks_v3';
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-notebook-premium';
         const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -508,6 +545,8 @@
             activePageId: null,
             mobileTab: 'page',
             selectedColor: '#1a1a1a', 
+            dockScale: 1.0,
+            dockPos: null,
             typingTimer: null
         };
 
@@ -518,6 +557,7 @@
             viewDesk: document.getElementById('view-desk'),
             viewNotebook: document.getElementById('view-notebook'),
             btnBack: document.getElementById('btn-back'),
+            btnExportPage: document.getElementById('btn-export-page'),
             emptyDeskState: document.getElementById('empty-desk-state'),
             notebookGrid: document.getElementById('notebook-grid'),
             
@@ -535,7 +575,9 @@
             editorRuling: document.getElementById('editor-ruling'),
             redMargin: document.getElementById('red-margin'),
             floatingToolbar: document.getElementById('floating-toolbar'),
+            dockScaleLabel: document.getElementById('dock-scale-label'),
             syncStatus: document.getElementById('sync-status'),
+            syncStatusText: document.getElementById('sync-status-text'),
             
             btnTabIndex: document.getElementById('btn-tab-index'),
             btnTabPage: document.getElementById('btn-tab-page'),
@@ -546,35 +588,94 @@
             colorPicker: document.getElementById('color-picker')
         };
 
-        // --- Loader Fallback Guarantee ---
-        let loaderTimeout = setTimeout(() => {
-            console.warn("Loader timed out. Forcefully unlocking UI.");
-            fallbackToLocal();
-        }, 15000); // Increased to 15 seconds to prevent premature disconnects and ensure permanent saving
+        // --- Persistent Local Storage Handlers ---
+        function saveToLocalStorage() {
+            try {
+                const dataToSave = {
+                    notebooks: state.notebooks,
+                    pages: state.pages,
+                    activeNotebookId: state.activeNotebookId,
+                    activePageId: state.activePageId,
+                    dockScale: state.dockScale,
+                    dockPos: state.dockPos
+                };
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+            } catch (e) {
+                console.warn("Unable to save to localStorage:", e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (!raw) return false;
+                const parsed = JSON.parse(raw);
+                if (parsed && Array.isArray(parsed.notebooks)) {
+                    state.notebooks = parsed.notebooks || [];
+                    state.pages = parsed.pages || [];
+                    state.activeNotebookId = parsed.activeNotebookId || null;
+                    state.activePageId = parsed.activePageId || null;
+                    state.dockScale = parsed.dockScale || 1.0;
+                    state.dockPos = parsed.dockPos || null;
+                    applyDockScaleUI();
+                    return true;
+                }
+            } catch (e) {
+                console.warn("Error reading localStorage:", e);
+            }
+            return false;
+        }
 
         function hideLoader() {
-            clearTimeout(loaderTimeout);
-            if (els.loader.style.display === 'none' || els.loader.classList.contains('hidden')) return;
+            if (!els.loader || els.loader.style.display === 'none' || els.loader.classList.contains('hidden')) return;
             els.loader.style.opacity = '0';
             setTimeout(() => {
                 els.loader.style.display = 'none';
                 els.loader.classList.add('hidden');
-            }, 500);
+            }, 400);
         }
 
         function fallbackToLocal() {
             isCloud = false;
+            const loaded = loadFromLocalStorage();
+            
+            // If completely empty on first launch, populate sample default notebook
+            if (!loaded && state.notebooks.length === 0) {
+                const sampleNbId = 'nb_' + Date.now();
+                const samplePgId = 'pg_' + Date.now();
+                state.notebooks = [{
+                    id: sampleNbId,
+                    name: 'My Inscriptions',
+                    color: '#1a1a1a',
+                    createdAt: Date.now()
+                }];
+                state.pages = [{
+                    id: samplePgId,
+                    notebookId: sampleNbId,
+                    title: 'Welcome to Atelier',
+                    content: 'Welcome to your premium digital journal.\n\nEverything you write here automatically persists across reloads! Your notebooks and page designs will remain saved right here on your desk.\n\nUse the floating dock at the bottom to adjust typography, paper style, or dock scale.',
+                    style: 'lined',
+                    font: 'serif',
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                }];
+                saveToLocalStorage();
+            }
+
             hideLoader();
-            els.syncStatus.innerHTML = `<i data-lucide="hard-drive" class="w-3 h-3"></i> <span>Local Mode</span>`;
-            els.syncStatus.className = 'sync-status saved';
-            lucide.createIcons();
-            if (!state.activeNotebookId) renderDesk();
+            setSyncStatus('saved');
+            
+            if (state.activeNotebookId && state.notebooks.some(n => n.id === state.activeNotebookId)) {
+                openNotebook(state.activeNotebookId);
+            } else {
+                renderDesk();
+            }
         }
 
-        // --- Authentication & Boot ---
+        // --- Firebase Boot & Fallback ---
         async function boot() {
             try {
-                if (!firebaseConfigStr) throw new Error("No Firebase config provided.");
+                if (!firebaseConfigStr) throw new Error("No Firebase config.");
                 const firebaseConfig = JSON.parse(firebaseConfigStr);
 
                 const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
@@ -603,42 +704,45 @@
                     }
                 });
             } catch (error) {
-                console.warn('Cloud Storage initialization failed. Using local mode.', error);
+                console.info('Using local offline persistent storage mode.', error);
                 fallbackToLocal();
             }
         }
 
-        // --- Data Listeners ---
         function startDataListeners() {
             if (!state.user || !isCloud) return;
             const uid = state.user.uid;
             const { collection, onSnapshot } = window.fbApi;
 
-            // Notebooks
+            // Notebooks Listener
             const nbRef = collection(db, 'artifacts', appId, 'users', uid, 'notebooks');
             onSnapshot(nbRef, (snapshot) => {
                 state.notebooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.notebooks.sort((a, b) => b.createdAt - a.createdAt);
                 
-                hideLoader(); // Hide successfully on data receipt
-                renderDesk();
+                saveToLocalStorage();
+                hideLoader();
                 
                 if (state.activeNotebookId) {
                     const activeNb = state.notebooks.find(n => n.id === state.activeNotebookId);
                     if (activeNb) els.nbTitleDisplay.textContent = activeNb.name;
                     else goHome();
+                } else {
+                    renderDesk();
                 }
             }, (err) => {
-                console.error("Notebooks Sync Error:", err);
+                console.error("Notebook Sync Error:", err);
                 fallbackToLocal();
             });
 
-            // Pages
+            // Pages Listener
             const pgRef = collection(db, 'artifacts', appId, 'users', uid, 'pages');
             onSnapshot(pgRef, (snapshot) => {
                 state.pages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.pages.sort((a, b) => a.createdAt - b.createdAt);
                 
+                saveToLocalStorage();
+
                 if (state.activeNotebookId) {
                     renderIndex();
                     const nbPages = state.pages.filter(p => p.notebookId === state.activeNotebookId);
@@ -649,7 +753,6 @@
                         state.activePageId = null;
                         renderEditor();
                     } else {
-                        // Update active page content if changed remotely
                         const curr = nbPages.find(p => p.id === state.activePageId);
                         if (curr && document.activeElement !== els.editorTitle && document.activeElement !== els.editorTextarea) {
                             els.editorTitle.value = curr.title;
@@ -659,7 +762,7 @@
                     }
                 }
             }, (err) => {
-                console.error("Pages Sync Error:", err);
+                console.error("Page Sync Error:", err);
             });
         }
 
@@ -669,6 +772,7 @@
             
             els.viewNotebook.classList.add('hidden');
             els.btnBack.classList.add('hidden');
+            els.btnExportPage.classList.add('hidden');
             els.viewDesk.classList.remove('hidden');
 
             if (state.notebooks.length === 0) {
@@ -699,11 +803,11 @@
                                 <div class="w-8 h-0.5 bg-[#d4af37]/60 mx-auto mb-4 rounded-full shadow-[0_1px_1px_rgba(0,0,0,0.5)]"></div>
                                 <h3 class="font-serif font-bold text-2xl leading-tight line-clamp-4 gold-foil mb-4">${escapeHtml(nb.name)}</h3>
                                 <div class="mt-auto">
-                                    <p class="text-[10px] text-[#d4af37]/70 font-sans uppercase tracking-[0.2em] font-bold drop-shadow-md">${date}</p>
+                                    <p class="text-[10px] text-[#d4af37]/75 font-sans uppercase tracking-[0.2em] font-bold drop-shadow-md">${date}</p>
                                 </div>
                             </div>
                             
-                            <!-- Delete button (visible on hover) -->
+                            <!-- Delete button -->
                             <button onclick="event.stopPropagation(); deleteNotebook('${nb.id}')" class="absolute -top-12 -right-12 p-4 bg-red-600/90 text-white rounded-full opacity-0 hover:opacity-100 hover:scale-110 transition-all z-20 shadow-xl border border-white/20 w-24 h-24 flex items-end justify-start pl-6 pb-6" title="Destroy Journal">
                                 <i data-lucide="trash-2" class="w-5 h-5"></i>
                             </button>
@@ -719,11 +823,14 @@
             state.activeNotebookId = id;
             state.mobileTab = 'index'; 
             const nb = state.notebooks.find(n => n.id === id);
+            if (!nb) return goHome();
             
+            saveToLocalStorage();
             els.viewDesk.classList.add('hidden');
             els.viewNotebook.classList.remove('hidden');
             els.viewNotebook.classList.add('flex');
             els.btnBack.classList.remove('hidden');
+            els.btnExportPage.classList.remove('hidden');
             
             els.nbTitleDisplay.textContent = nb.name;
             els.bookWrapper.style.backgroundColor = nb.color;
@@ -733,16 +840,19 @@
             
             const nbPages = state.pages.filter(p => p.notebookId === id);
             if (nbPages.length > 0) {
-                openPage(nbPages[0].id);
+                const pageToOpen = state.activePageId && nbPages.some(p => p.id === state.activePageId) ? state.activePageId : nbPages[0].id;
+                openPage(pageToOpen);
             } else {
                 state.activePageId = null;
                 renderEditor();
             }
+            positionFloatingDock();
         };
 
         window.goHome = function() {
             state.activeNotebookId = null;
             state.activePageId = null;
+            saveToLocalStorage();
             els.floatingToolbar.classList.add('opacity-0', 'pointer-events-none');
             renderDesk();
         };
@@ -753,7 +863,7 @@
             els.pageCount.textContent = `${nbPages.length} Page${nbPages.length !== 1 ? 's' : ''}`;
             
             if (nbPages.length === 0) {
-                els.indexList.innerHTML = `<div class="text-center text-gray-400 mt-10 font-serif italic text-lg opacity-70">Journal is empty.</div>`;
+                els.indexList.innerHTML = `<div class="text-center text-gray-400 mt-10 font-serif italic text-base opacity-70">Journal is empty.</div>`;
                 return;
             }
 
@@ -763,10 +873,10 @@
                 const fontClass = p.font === 'hand' ? 'font-hand' : (p.font === 'serif' ? 'font-serif' : 'font-sans font-medium');
                 
                 html += `
-                    <button onclick="openPage('${p.id}')" class="w-full text-left px-5 py-4 rounded-xl transition-all flex items-center justify-between group border ${isActive ? 'bg-gray-900 text-white shadow-md transform scale-[1.02] border-transparent' : 'border-transparent text-gray-700 hover:bg-gray-200/60'}">
-                        <div class="flex items-center gap-4 overflow-hidden">
+                    <button onclick="openPage('${p.id}')" class="w-full text-left px-5 py-3.5 rounded-xl transition-all flex items-center justify-between group border ${isActive ? 'bg-gray-900 text-white shadow-lg transform scale-[1.01] border-transparent' : 'border-transparent text-gray-700 hover:bg-gray-200/70'}">
+                        <div class="flex items-center gap-3.5 overflow-hidden">
                             <span class="font-mono text-[10px] font-bold opacity-60 ${isActive ? 'text-[#d4af37]' : 'text-gray-400'}">${(i + 1).toString().padStart(2, '0')}</span>
-                            <span class="truncate flex-1 text-lg ${fontClass}">${escapeHtml(p.title) || 'Untitled Page'}</span>
+                            <span class="truncate flex-1 text-base ${fontClass}">${escapeHtml(p.title) || 'Untitled Page'}</span>
                         </div>
                         <span class="text-[10px] font-bold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}">View</span>
                     </button>
@@ -777,6 +887,7 @@
 
         window.openPage = function(id) {
             state.activePageId = id;
+            saveToLocalStorage();
             if (window.innerWidth < 768) setMobileTab('page');
             renderIndex(); 
             renderEditor();
@@ -825,32 +936,33 @@
             const fontClassMap = { 'sans': 'font-sans', 'serif': 'font-serif', 'hand': 'font-hand' };
             const fontClass = fontClassMap[page.font || 'sans'];
             
-            els.editorTitle.className = `text-3xl md:text-4xl font-bold bg-transparent border-none outline-none w-full text-gray-900 placeholder-gray-300/60 tracking-tight ${fontClass}`;
+            els.editorTitle.className = `text-3xl md:text-4xl font-bold bg-transparent border-none outline-none w-full text-gray-900 placeholder-gray-400/50 tracking-tight ${fontClass}`;
             els.editorTextarea.className = `absolute inset-0 w-full h-full z-10 outline-none px-8 pb-20 custom-scroll ${page.style === 'lined' || !page.style ? 'md:pl-[72px]' : 'md:pl-8'} md:pr-12 ${fontClass}`;
         }
 
         function updateToolbarUI(page) {
             document.querySelectorAll('#floating-toolbar button').forEach(btn => {
                 if(!btn.classList.contains('text-red-400')) {
-                    btn.classList.remove('bg-white/40', 'shadow-inner');
+                    btn.classList.remove('bg-white/30', 'text-white');
                 }
             });
             const fontBtn = document.getElementById(`btn-font-${page.font || 'sans'}`);
-            if (fontBtn) fontBtn.classList.add('bg-white/40', 'shadow-inner');
+            if (fontBtn) fontBtn.classList.add('bg-white/30', 'text-white');
 
             const styleBtn = document.getElementById(`btn-style-${page.style || 'lined'}`);
-            if (styleBtn) styleBtn.classList.add('bg-white/40', 'shadow-inner');
+            if (styleBtn) styleBtn.classList.add('bg-white/30', 'text-white');
         }
 
-        // --- Data Mutators & Sync Indicator ---
-        
+        // --- Data Persistence ---
         function setSyncStatus(status) {
             if (status === 'syncing') {
                 els.syncStatus.className = 'sync-status syncing';
-                els.syncStatus.innerHTML = `<i data-lucide="cloud-upload" class="w-3 h-3 animate-pulse"></i> <span>Saving...</span>`;
+                els.syncStatusText.textContent = 'Saving...';
+                els.syncStatus.querySelector('i').setAttribute('data-lucide', 'cloud-upload');
             } else if (status === 'saved') {
                 els.syncStatus.className = 'sync-status saved';
-                els.syncStatus.innerHTML = `<i data-lucide="${isCloud ? 'cloud-lightning' : 'hard-drive'}" class="w-3 h-3"></i> <span>${isCloud ? 'Cloud Synced' : 'Locally Saved'}</span>`;
+                els.syncStatusText.textContent = isCloud ? 'Cloud Synced' : 'Saved Locally';
+                els.syncStatus.querySelector('i').setAttribute('data-lucide', isCloud ? 'cloud-lightning' : 'hard-drive');
             }
             lucide.createIcons();
         }
@@ -858,15 +970,14 @@
         window.handleTyping = function() {
             setSyncStatus('syncing');
             clearTimeout(state.typingTimer);
-            state.typingTimer = setTimeout(saveCurrentPage, 800); 
             
-            if (!isCloud) {
-                const page = state.pages.find(p => p.id === state.activePageId);
-                if (page) {
-                    page.title = els.editorTitle.value;
-                    page.content = els.editorTextarea.value;
-                }
+            const page = state.pages.find(p => p.id === state.activePageId);
+            if (page) {
+                page.title = els.editorTitle.value;
+                page.content = els.editorTextarea.value;
             }
+
+            state.typingTimer = setTimeout(saveCurrentPage, 600); 
         };
 
         async function saveCurrentPage() {
@@ -874,24 +985,28 @@
             const title = els.editorTitle.value;
             const content = els.editorTextarea.value;
             
+            const page = state.pages.find(p => p.id === state.activePageId);
+            if (page) {
+                page.title = title;
+                page.content = content;
+                page.updatedAt = Date.now();
+            }
+
+            saveToLocalStorage();
+
             if (isCloud && state.user) {
                 try {
                     const { doc, updateDoc } = window.fbApi;
                     await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
                         title, content, updatedAt: Date.now()
                     });
-                    setTimeout(() => setSyncStatus('saved'), 300);
-                } catch (e) { console.error("Save error:", e); }
-            } else {
-                const page = state.pages.find(p => p.id === state.activePageId);
-                if (page) {
-                    page.title = title;
-                    page.content = content;
-                    page.updatedAt = Date.now();
+                } catch (e) { 
+                    console.error("Cloud Save error:", e); 
                 }
-                setTimeout(() => setSyncStatus('saved'), 300);
-                renderIndex(); 
             }
+            
+            setSyncStatus('saved');
+            renderIndex(); 
         }
 
         window.updatePageProperty = async function(property, value) {
@@ -904,6 +1019,7 @@
                 applyPageStyles(currPage);
                 updateToolbarUI(currPage);
                 renderIndex(); 
+                saveToLocalStorage();
             }
 
             if (isCloud && state.user) {
@@ -912,11 +1028,10 @@
                     await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId), {
                         [property]: value, updatedAt: Date.now()
                     });
-                    setTimeout(() => setSyncStatus('saved'), 300);
                 } catch (e) { console.error("Property update error:", e); }
-            } else {
-                setTimeout(() => setSyncStatus('saved'), 300);
             }
+            
+            setTimeout(() => setSyncStatus('saved'), 200);
         };
 
         window.createNewPage = async function() {
@@ -935,13 +1050,14 @@
                 try {
                     const { collection, addDoc } = window.fbApi;
                     const newRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), newPageData);
-                    openPage(newRef.id);
+                    newPageData.id = newRef.id;
                 } catch(e) { console.error("Create page error:", e); }
-            } else {
-                const newId = 'local_pg_' + Date.now();
-                state.pages.push({ id: newId, ...newPageData });
-                openPage(newId);
             }
+            
+            if (!newPageData.id) newPageData.id = 'pg_' + Date.now();
+            state.pages.push(newPageData);
+            saveToLocalStorage();
+            openPage(newPageData.id);
         };
 
         window.deleteCurrentPage = async function() {
@@ -952,10 +1068,10 @@
                 btn.dataset.confirm = "true";
                 btn.classList.add('bg-red-600', 'text-white');
                 btn.classList.remove('text-red-400', 'hover:bg-red-500');
-                btn.innerHTML = `<span class="text-xs font-bold px-1">Sure?</span>`;
+                btn.innerHTML = `<span class="text-xs font-bold px-1">Tear Out?</span>`;
                 
                 setTimeout(() => {
-                    if (btn.dataset.confirm) {
+                    if (btn && btn.dataset.confirm) {
                         btn.removeAttribute('data-confirm');
                         btn.classList.remove('bg-red-600', 'text-white');
                         btn.classList.add('text-red-400', 'hover:bg-red-500');
@@ -966,44 +1082,60 @@
                 return;
             }
 
+            const pageIdToDelete = state.activePageId;
+            state.pages = state.pages.filter(p => p.id !== pageIdToDelete);
+            state.activePageId = null;
+            saveToLocalStorage();
+
             if (isCloud && state.user) {
                 try {
                     const { doc, deleteDoc } = window.fbApi;
-                    await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', state.activePageId));
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'pages', pageIdToDelete));
                 } catch(e) { console.error(e); }
-            } else {
-                state.pages = state.pages.filter(p => p.id !== state.activePageId);
             }
             
-            state.activePageId = null;
             btn.removeAttribute('data-confirm');
             btn.classList.remove('bg-red-600', 'text-white');
             btn.classList.add('text-red-400', 'hover:bg-red-500');
             btn.innerHTML = `<i data-lucide="trash-2" class="w-4 h-4"></i>`;
             lucide.createIcons();
             
-            if (!isCloud) {
-                renderIndex();
-                renderEditor();
-            }
+            renderIndex();
+            renderEditor();
         };
 
         window.deleteNotebook = async function(id) {
+            state.notebooks = state.notebooks.filter(n => n.id !== id);
+            state.pages = state.pages.filter(p => p.notebookId !== id);
+            saveToLocalStorage();
+
             if (isCloud && state.user) {
                 try {
                     const { doc, deleteDoc } = window.fbApi;
                     await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks', id));
-                    if(state.activeNotebookId === id) goHome();
                 } catch(e) { console.error(e); }
-            } else {
-                state.notebooks = state.notebooks.filter(n => n.id !== id);
-                state.pages = state.pages.filter(p => p.notebookId !== id);
-                renderDesk();
-                if(state.activeNotebookId === id) goHome();
             }
+            
+            renderDesk();
+            if(state.activeNotebookId === id) goHome();
         };
 
-        // --- Modals & Mobile ---
+        window.exportCurrentPage = function() {
+            const page = state.pages.find(p => p.id === state.activePageId);
+            if (!page) return;
+            
+            const filename = (page.title || 'Page_Inscription').replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.txt';
+            const textContent = `${page.title.toUpperCase()}\n\n${page.content}`;
+            
+            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        };
+
+        // --- Modals & Options ---
         els.colorPicker.innerHTML = PREMIUM_COLORS.map(c => `
             <button onclick="selectColor('${c}')" class="w-12 h-12 rounded-full transition-all duration-300 color-option relative shadow-md hover:shadow-lg" data-color="${c}" style="background-color: ${c}">
                 <div class="absolute inset-0 leather-texture rounded-full opacity-50 pointer-events-none"></div>
@@ -1052,7 +1184,7 @@
             const nbData = { name, color: state.selectedColor, createdAt: Date.now() };
             const pageData = {
                 title: 'Prologue',
-                content: 'Welcome to your new journal.\n\nAll modifications you make are instantly synchronized securely to the cloud. Notice the indicator in the bottom right validating your saves.\n\nUse the glass dock below to customize your paper and font.',
+                content: 'Welcome to your new journal.\n\nAll notes and page styles are persistently preserved directly on your desk.\n\nUse the floating glass dock below to customize font styles, paper layouts, or toolbar scaling.',
                 style: 'lined',
                 font: 'serif',
                 createdAt: Date.now(),
@@ -1063,35 +1195,29 @@
                 try {
                     const { collection, addDoc } = window.fbApi;
                     const nbRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'notebooks'), nbData);
+                    nbData.id = nbRef.id;
                     pageData.notebookId = nbRef.id;
-                    await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), pageData);
-
-                    closeModal();
-                    openNotebook(nbRef.id);
+                    const pgRef = await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'pages'), pageData);
+                    pageData.id = pgRef.id;
                 } catch(e) {
                     console.error(e);
-                } finally {
-                    btnSubmit.disabled = false;
-                    btnSubmit.textContent = 'Bind Journal';
                 }
-            } else {
-                const nbId = 'local_nb_' + Date.now();
-                const pgId = 'local_pg_' + Date.now();
-                
-                nbData.id = nbId;
-                pageData.id = pgId;
-                pageData.notebookId = nbId;
-                
-                state.notebooks.push(nbData);
-                state.pages.push(pageData);
-                
-                closeModal();
-                renderDesk();
-                openNotebook(nbId);
-                
-                btnSubmit.disabled = false;
-                btnSubmit.textContent = 'Bind Journal';
             }
+
+            if (!nbData.id) nbData.id = 'nb_' + Date.now();
+            if (!pageData.id) pageData.id = 'pg_' + Date.now();
+            pageData.notebookId = nbData.id;
+
+            state.notebooks.push(nbData);
+            state.pages.push(pageData);
+            saveToLocalStorage();
+
+            closeModal();
+            renderDesk();
+            openNotebook(nbData.id);
+
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = 'Bind Journal';
         };
 
         window.setMobileTab = function(tab) {
@@ -1131,13 +1257,67 @@
             }
         }
 
-        window.addEventListener('resize', () => { if (state.activeNotebookId) updateMobileTabs(); });
+        window.addEventListener('resize', () => { 
+            if (state.activeNotebookId) updateMobileTabs(); 
+            clampDockPosition();
+        });
 
         function escapeHtml(unsafe) {
             return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // --- Toolbar Drag Logic ---
+        // --- Resizable & Smooth Floating Dock Controls ---
+        window.changeDockScale = function(delta) {
+            let newScale = Math.round((state.dockScale + delta) * 10) / 10;
+            if (newScale < 0.7) newScale = 0.7;
+            if (newScale > 1.4) newScale = 1.4;
+            state.dockScale = newScale;
+            applyDockScaleUI();
+            saveToLocalStorage();
+            clampDockPosition();
+        };
+
+        function applyDockScaleUI() {
+            document.documentElement.style.setProperty('--dock-scale', state.dockScale);
+            els.dockScaleLabel.textContent = `${Math.round(state.dockScale * 100)}%`;
+        }
+
+        function positionFloatingDock() {
+            const dock = els.floatingToolbar;
+            if (state.dockPos) {
+                dock.style.left = state.dockPos.x + 'px';
+                dock.style.top = state.dockPos.y + 'px';
+                dock.style.bottom = 'auto';
+                dock.style.transform = `scale(${state.dockScale})`;
+                dock.style.transformOrigin = 'top left';
+            } else {
+                dock.style.bottom = '32px';
+                dock.style.left = '50%';
+                dock.style.transform = `translateX(-50%) scale(${state.dockScale})`;
+                dock.style.transformOrigin = 'center center';
+                dock.style.top = 'auto';
+            }
+            clampDockPosition();
+        }
+
+        function clampDockPosition() {
+            const dock = els.floatingToolbar;
+            if (!state.dockPos) return;
+            const rect = dock.getBoundingClientRect();
+            let newX = state.dockPos.x;
+            let newY = state.dockPos.y;
+
+            if (newX < 10) newX = 10;
+            if (newX + rect.width > window.innerWidth - 10) newX = window.innerWidth - rect.width - 10;
+            if (newY < 10) newY = 10;
+            if (newY + rect.height > window.innerHeight - 10) newY = window.innerHeight - rect.height - 10;
+
+            state.dockPos = { x: newX, y: newY };
+            dock.style.left = newX + 'px';
+            dock.style.top = newY + 'px';
+        }
+
+        // Floating Dock Drag Handle
         let isDragging = false;
         let dragStartX, dragStartY;
 
@@ -1157,14 +1337,13 @@
             dragStartY = clientY;
             
             const rect = els.floatingToolbar.getBoundingClientRect();
+            state.dockPos = { x: rect.left, y: rect.top };
             
-            // Remove automatic centering classes so it can freely float via JS coordinates
-            els.floatingToolbar.classList.remove('bottom-12', 'left-1/2', '-translate-x-1/2');
-            
+            els.floatingToolbar.style.bottom = 'auto';
             els.floatingToolbar.style.left = rect.left + 'px';
             els.floatingToolbar.style.top = rect.top + 'px';
-            els.floatingToolbar.style.bottom = 'auto';
-            els.floatingToolbar.style.right = 'auto';
+            els.floatingToolbar.style.transform = `scale(${state.dockScale})`;
+            els.floatingToolbar.style.transformOrigin = 'top left';
 
             document.addEventListener('mousemove', onDrag);
             document.addEventListener('touchmove', onDrag, { passive: false });
@@ -1185,15 +1364,16 @@
             dragStartX = clientX;
             dragStartY = clientY;
             
-            const currentLeft = parseFloat(els.floatingToolbar.style.left) || 0;
-            const currentTop = parseFloat(els.floatingToolbar.style.top) || 0;
+            state.dockPos.x += dx;
+            state.dockPos.y += dy;
             
-            els.floatingToolbar.style.left = (currentLeft + dx) + 'px';
-            els.floatingToolbar.style.top = (currentTop + dy) + 'px';
+            clampDockPosition();
         }
 
         function endDrag() {
+            if (!isDragging) return;
             isDragging = false;
+            saveToLocalStorage();
             document.removeEventListener('mousemove', onDrag);
             document.removeEventListener('touchmove', onDrag);
             document.removeEventListener('mouseup', endDrag);
@@ -1202,7 +1382,6 @@
 
         lucide.createIcons();
         boot();
-
     </script>
 </body>
 </html>
