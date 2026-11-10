@@ -639,7 +639,7 @@
             isCloud = false;
             const loaded = loadFromLocalStorage();
             
-            // If completely empty on first launch, populate sample default notebook
+            // Populate initial default notebook if completely empty on first launch
             if (!loaded && state.notebooks.length === 0) {
                 const sampleNbId = 'nb_' + Date.now();
                 const samplePgId = 'pg_' + Date.now();
@@ -672,8 +672,24 @@
             }
         }
 
-        // --- Firebase Boot & Fallback ---
+        // --- Application Boot ---
         async function boot() {
+            // First load local storage so user data is instantly restored
+            loadFromLocalStorage();
+
+            // Window beforeunload safeguard to instantly flush text edits
+            window.addEventListener('beforeunload', () => {
+                if (state.activePageId) {
+                    const page = state.pages.find(p => p.id === state.activePageId);
+                    if (page && els.editorTitle && els.editorTextarea) {
+                        page.title = els.editorTitle.value;
+                        page.content = els.editorTextarea.value;
+                        page.updatedAt = Date.now();
+                    }
+                }
+                saveToLocalStorage();
+            });
+
             try {
                 if (!firebaseConfigStr) throw new Error("No Firebase config.");
                 const firebaseConfig = JSON.parse(firebaseConfigStr);
@@ -717,9 +733,11 @@
             // Notebooks Listener
             const nbRef = collection(db, 'artifacts', appId, 'users', uid, 'notebooks');
             onSnapshot(nbRef, (snapshot) => {
-                state.notebooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                state.notebooks.sort((a, b) => b.createdAt - a.createdAt);
-                
+                const cloudNbs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (cloudNbs.length > 0) {
+                    state.notebooks = cloudNbs;
+                    state.notebooks.sort((a, b) => b.createdAt - a.createdAt);
+                }
                 saveToLocalStorage();
                 hideLoader();
                 
@@ -738,9 +756,11 @@
             // Pages Listener
             const pgRef = collection(db, 'artifacts', appId, 'users', uid, 'pages');
             onSnapshot(pgRef, (snapshot) => {
-                state.pages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                state.pages.sort((a, b) => a.createdAt - b.createdAt);
-                
+                const cloudPgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (cloudPgs.length > 0) {
+                    state.pages = cloudPgs;
+                    state.pages.sort((a, b) => a.createdAt - b.createdAt);
+                }
                 saveToLocalStorage();
 
                 if (state.activeNotebookId) {
@@ -886,6 +906,16 @@
         }
 
         window.openPage = function(id) {
+            // Flush current text changes before changing pages
+            if (state.activePageId) {
+                const current = state.pages.find(p => p.id === state.activePageId);
+                if (current) {
+                    current.title = els.editorTitle.value;
+                    current.content = els.editorTextarea.value;
+                    current.updatedAt = Date.now();
+                }
+            }
+
             state.activePageId = id;
             saveToLocalStorage();
             if (window.innerWidth < 768) setMobileTab('page');
@@ -953,7 +983,7 @@
             if (styleBtn) styleBtn.classList.add('bg-white/30', 'text-white');
         }
 
-        // --- Data Persistence ---
+        // --- Immediate Data Persistence ---
         function setSyncStatus(status) {
             if (status === 'syncing') {
                 els.syncStatus.className = 'sync-status syncing';
@@ -969,15 +999,19 @@
 
         window.handleTyping = function() {
             setSyncStatus('syncing');
-            clearTimeout(state.typingTimer);
             
             const page = state.pages.find(p => p.id === state.activePageId);
             if (page) {
                 page.title = els.editorTitle.value;
                 page.content = els.editorTextarea.value;
+                page.updatedAt = Date.now();
             }
 
-            state.typingTimer = setTimeout(saveCurrentPage, 600); 
+            // INSTANT LOCAL SAVE SO TEXT IS NEVER LOST EVEN ON IMMEDIATE REFRESH
+            saveToLocalStorage();
+
+            clearTimeout(state.typingTimer);
+            state.typingTimer = setTimeout(saveCurrentPage, 500); 
         };
 
         async function saveCurrentPage() {
